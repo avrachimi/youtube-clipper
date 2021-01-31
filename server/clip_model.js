@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
-const clipsSchema = new Schema({
-    videoId: {
+const clipSchema = new Schema({
+    youtubeId: {
         type: String,
         required: true
     },
@@ -15,6 +15,8 @@ const clipsSchema = new Schema({
         type: Number,
         required: true
     }
+}, {
+    timestamps: { currentTime: () => new Date().toUTCString() } // all times in GMT
 });
 
-module.exports = mongoose.model("Clip", clipsSchema);
+module.exports = mongoose.model("Clip", clipSchema);

@@ -15,37 +15,33 @@ app.use(bodyParser.json());
 // Youtube URL with starting time marker
 // https://youtu.be/[id]?t=291
 
-app.get('/create/:videoId', function(req, res) {
-    const videoId = req.params.videoId;
+app.post('/create/:youtubeId', async function(req, res) {
+    const youtubeId = req.params.youtubeId;
     const startTime = req.query.start;
     const duration = req.query.dur;
 
-    //const clip = await clips.create(videoId, startTime, duration);
-    var clip = new Clip({
-        videoId: videoId,
-        startTime: startTime,
-        duration: duration
-    });
+    const clip = await clips.create(youtubeId, startTime, duration);
+    const url = 'http://' + req.get('host') + '/' + clip.id;
 
-    clip.save();
-
-    res.json(clip);
+    res.json({ url: url });
 })
 
 app.get('/:id', async function(req, res) {
     const id = req.params.id;
-    const clip = await Clip.findById(id).exec(); //clips.get(id);
-    const youtubeId = clip.videoId;
+    const clip = await clips.get(id);
+    const youtubeId = clip.youtubeId;
     const url = 'https://youtu.be/' + youtubeId + '?t=' + 290;
 
     res.json({
-        message: 'Database Entry ID is: ' + id,
-        youtubeURL: url
+        youtubeURL: url,
+        duration: clip.duration
     });
 })
 
-app.get('/clips', async function(req, res) {
-    res.json(Clip.find());//clips.getAll());
+app.get('/view/clips', async function(req, res) {
+    const body = req.body;
+    const allClips = await clips.getAll();
+    res.json(allClips);
 })
 
 

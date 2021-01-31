@@ -18,12 +18,12 @@ function get(id) {
 }
 
 function getAll() {
-    return Clip.find();
+    return Clip.find({});
 }
 
-function create(videoId, start, duration) {
-    var clip = new Clip({
-        videoId: videoId,
+function create(youtubeId, start, duration) {
+    const clip = new Clip({
+        youtubeId: youtubeId,
         startTime: start,
         duration: duration
     });
