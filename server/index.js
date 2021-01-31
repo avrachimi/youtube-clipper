@@ -16,7 +16,7 @@ app.use(bodyParser.json());
 // https://youtu.be/[id]?t=291
 
 app.get('/create/:videoId', function(req, res) {
-    const videoId = req.params.id;
+    const videoId = req.params.videoId;
     const startTime = req.query.start;
     const duration = req.query.dur;
 
