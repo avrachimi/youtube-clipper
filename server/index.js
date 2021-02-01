@@ -12,25 +12,23 @@ app.use(morgan('tiny'));
 app.use(cors());
 app.use(bodyParser.json());
 
-// Youtube URL with starting time marker
-// https://youtu.be/[id]?t=291
+// https://youtu.be/[id]?t=[startTime]
 
-app.post('/create/:youtubeId', async function(req, res) {
-    const youtubeId = req.params.youtubeId;
-    const startTime = req.query.start;
-    const duration = req.query.dur;
+app.post('/create', async function(req, res) {
+    const youtubeId = req.body.youtubeId;
+    const startTime = req.body.startTime;
+    const duration = req.body.duration;
 
     const clip = await clips.create(youtubeId, startTime, duration);
     const url = 'http://' + req.get('host') + '/' + clip.id;
 
-    res.json({ url: url });
+    res.json(clip);
 })
 
-app.get('/:id', async function(req, res) {
+app.get('/clip/:id', async function(req, res) {
     const id = req.params.id;
     const clip = await clips.get(id);
-    const youtubeId = clip.youtubeId;
-    const url = 'https://youtu.be/' + youtubeId + '?t=' + 290;
+    const url = 'https://youtu.be/' + clip.youtubeId + '?t=' + clip.startTime;
 
     res.json({
         youtubeURL: url,
